@@ -200,16 +200,16 @@ router.delete("/delete/:username", async (req, res) => {
     }
 
     // Delete user from auth table
-    const { error: authDeleteError } = await supabase.auth.admin.deleteUser(
-      user.id
-    );
+    // const { error: authDeleteError } = await supabase.auth.admin.deleteUser(
+    //   user.id
+    // );
 
-    if (authDeleteError) {
-      console.error("Supabase Auth error:", authDeleteError);
-      return res
-        .status(500)
-        .json({ error: "Failed to delete user from Supabase Auth" });
-    }
+    // if (authDeleteError) {
+    //   console.error("Supabase Auth error:", authDeleteError);
+    //   return res
+    //     .status(500)
+    //     .json({ error: "Failed to delete user from Supabase Auth" });
+    // }
 
     // Delete user from app_user
     const { error: dbDeleteError } = await supabase

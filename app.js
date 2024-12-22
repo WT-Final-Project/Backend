@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const userRoutes = require("./routes/userRoutes.js");
+const projectRoutes = require("./routes/projectRoutes.js");
 /*
 const routesFichero = require("./routes/ficheroRoutes.js");
 const routesParticipan = require("./routes/participanRoutes.js");
@@ -23,15 +24,15 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRoutes);
+app.use("/project", projectRoutes);
 /*
 app.use("/fichero", routesFichero);
 app.use("/participan", routesParticipan);
 app.use("/peticion", routesPeticion);
-app.use("/proyecto", routesProyecto);
 app.use("/tarea", routesTarea);
 */
 
-// Manejo de errores generales
+// General error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("¡Something went wrong!");
