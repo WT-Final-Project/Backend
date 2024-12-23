@@ -4,12 +4,11 @@ const cors = require("cors");
 
 const userRoutes = require("./routes/userRoutes.js");
 const projectRoutes = require("./routes/projectRoutes.js");
+const taskRoutes = require("./routes/taskRoutes.js");
 /*
 const routesFichero = require("./routes/ficheroRoutes.js");
 const routesParticipan = require("./routes/participanRoutes.js");
 const routesPeticion = require("./routes/peticionRoutes.js");
-const routesProyecto = require("./routes/proyectoRoutes.js");
-const routesTarea = require("./routes/tareaRoutes.js");
 */
 const app = express();
 
@@ -25,11 +24,14 @@ app.get("/", (req, res) => {
 
 app.use("/user", userRoutes);
 app.use("/project", projectRoutes);
+app.use("/task", taskRoutes);
 /*
+app.use("/usuario")
+app.use("/tarea")
+app.use("/proyecto")
 app.use("/fichero", routesFichero);
 app.use("/participan", routesParticipan);
 app.use("/peticion", routesPeticion);
-app.use("/tarea", routesTarea);
 */
 
 // General error handling

@@ -108,7 +108,7 @@ router.post("/signin", async (req, res) => {
       .from("app_user")
       .select("*")
       .eq("id", singinUser.user.id)
-      .maybeSingle();
+      .single();
 
     // Handle errors if Supabase query fails
     if (error) {
@@ -150,7 +150,7 @@ router.get("/obtain/:username", async (req, res) => {
       .from("app_user")
       .select("*")
       .eq("username", usernameLowerCase)
-      .maybeSingle();
+      .single();
 
     // Handle errors if Supabase query fails
     if (error) {
@@ -189,7 +189,7 @@ router.delete("/delete/:username", async (req, res) => {
       .from("app_user")
       .select("id, username")
       .eq("username", usernameLowerCase)
-      .maybeSingle();
+      .single();
 
     if (userError) {
       return res.status(userStatus).json({ error: userError.message });

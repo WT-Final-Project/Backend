@@ -61,7 +61,7 @@ router.get("/obtain/:projectId", async (req, res) => {
       .from("project")
       .select("*")
       .eq("projectid", projectId)
-      .maybeSingle();
+      .single();
 
     if (projectError) {
       return res.status(projectStatus).json({
