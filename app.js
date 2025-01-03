@@ -5,6 +5,7 @@ const cors = require("cors");
 const userRoutes = require("./routes/userRoutes.js");
 const projectRoutes = require("./routes/projectRoutes.js");
 const taskRoutes = require("./routes/taskRoutes.js");
+const ParticipateRoute = require("./routes/participateRoutes.js");
 /*
 const routesFichero = require("./routes/ficheroRoutes.js");
 const routesParticipan = require("./routes/participanRoutes.js");
@@ -16,15 +17,14 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
 
-// Ruta para la página de inicio
 app.get("/", (req, res) => {
-  // No hace nada, simplemente responde con un mensaje vacío
-  res.send("Bienvenido a la página de inicio");
+  res.send("Welcome!");
 });
 
 app.use("/user", userRoutes);
 app.use("/project", projectRoutes);
 app.use("/task", taskRoutes);
+app.use("/participate", ParticipateRoute);
 /*
 app.use("/usuario")
 app.use("/tarea")

@@ -129,7 +129,7 @@ router.post("/signin", async (req, res) => {
 });
 
 // Route to obtain a certain user
-router.get("/obtain/:username", async (req, res) => {
+router.get("/:username", async (req, res) => {
   try {
     // Validate the username parameter
     const username = req.params.username;
@@ -173,7 +173,7 @@ router.get("/obtain/:username", async (req, res) => {
 });
 
 //Route for deleting a user
-router.delete("/delete/:username", async (req, res) => {
+router.delete("/:username", async (req, res) => {
   try {
     const username = req.params.username;
 
@@ -232,7 +232,7 @@ router.delete("/delete/:username", async (req, res) => {
 });
 
 //Ruta para actualizar el nombre de un usuario
-router.post("/actualizar/:nombreUsuario", async (req, res) => {
+router.post("/:nombreUsuario", async (req, res) => {
   try {
     const nombreUsuario = req.params.nombreUsuario;
     const { nombre, contrasenya, correo, apellidos } = req.body;
