@@ -35,22 +35,24 @@ router.post("/singup", async (req, res) => {
     }
 
     // Create the user in Supabase Auth
-    const { data: user, error: authError } = await supabase.auth.signUp({
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email: email,
       password: password,
     });
 
     // Check error supabase.auth.signUp()
     if (authError) {
-      return res.status(500).json({ error: authError.message });
+      return res.status(500).json({
+        error: `There was an error creatin the user: ${authError.message}`,
+      });
     }
 
     // Insert into app_user table
-    const { error: insertError, status } = await supabase
+    const { error: insertError, status: insertStatus } = await supabase
       .from("app_user")
       .insert([
         {
-          id: user.user.id,
+          id: authData.user.id,
           username: usernameLowerCase,
           firstname: name,
           lastname: lastName,
@@ -59,13 +61,13 @@ router.post("/singup", async (req, res) => {
       ]);
 
     if (insertError) {
-      return res
-        .status(status)
-        .json({ error: "Error creating user in app_user table", insertError });
+      return res.status(insertStatus).json({
+        error: `Error creating user in app_user table ${insertError.message}`,
+      });
     }
 
     // Success response
-    return res.sendStatus(status);
+    return res.sendStatus(insertStatus);
   } catch (err) {
     console.error("Error while creating user:", err);
     res.status(500).json({ error: "Internal Server Error" });

@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
       .insert({
         projectid: projectId,
         username: username,
-        role: role || "participant", // Default to "participant" if not provided
+        role: role || "participant",
       });
 
     if (insertError) {
@@ -29,17 +29,36 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Ruta para obtener el rango de un participante dado el id del proyecto y el nombre de usuario
-router.get("/obtener/:idProyecto/:nombreUsuario", async (req, res) => {
+// Route to obtain a user's rank in a project
+router.get("/rank/:projectId/:username", async (req, res) => {
   try {
-    const nombreUsuario = req.params.nombreUsuario;
-    const idProyecto = req.params.idProyecto;
-    const participan = await participanDAO.getRange(nombreUsuario, idProyecto);
-    if (participan) {
-      res.json(participan);
-    } else {
-      res.status(404).json({ error: "Participante no encontrado" });
+    const { projectId, username } = req.params;
+
+    // Query the 'participate' table to get the user's role in the project
+    const {
+      data: rankData,
+      error: rankError,
+      status: rankStatus,
+    } = await supabase
+      .from("participate")
+      .select("role")
+      .eq("projectid", projectId)
+      .eq("username", username)
+      .maybeSingle();
+
+    if (rankError) {
+      return res.status(rankStatus).json({
+        error: `There was an error retrieving the user's rank: ${queryError.message}`,
+      });
     }
+
+    if (!rankData) {
+      return res
+        .status(rankStatus)
+        .json({ error: "Participant not found in the project." });
+    }
+
+    res.status(rankStatus).json({ data: rankData });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -69,31 +88,45 @@ router.delete("/:projectId/:username", async (req, res) => {
   }
 });
 
-// Ruta para obtener los proyectos a los que pertenece un proyecto
-router.get("/obtener/:nombreUsuario", async (req, res) => {
-  try {
-    const nombreUsuario = req.params.nombreUsuario;
-    const participan = await participanDAO.getByNombre(nombreUsuario);
-    if (participan) {
-      res.json(participan);
-    } else {
-      res.status(404).json({ error: "Participante no encontrado" });
-    }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// This next route is the same as the upcoming route.
 
-//ruta para obtener todos los proyectos en los que participa el usuario junto con su rol en ellos
-router.get("/proyectosUsuario/:nombreUsuario", async (req, res) => {
+// // Ruta para obtener los proyectos a los que pertenece un proyecto
+// router.get("/obtener/:nombreUsuario", async (req, res) => {
+//   try {
+//     const nombreUsuario = req.params.nombreUsuario;
+//     const participan = await participanDAO.getByNombre(nombreUsuario);
+//     if (participan) {
+//       res.json(participan);
+//     } else {
+//       res.status(404).json({ error: "Participante no encontrado" });
+//     }
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
+// Route to obtain all the projects in which the user participate with his role
+router.get("/user-projects/:username", async (req, res) => {
   try {
-    const nombreUsuario = req.params.nombreUsuario;
-    const participan = await participanDAO.getProyectosUsuario(nombreUsuario);
-    if (participan) {
-      res.json(participan);
-    } else {
-      res.status(404).json({ error: "Participante no encontrado" });
+    const username = req.params.username;
+
+    // Query the 'participate' table to get all projects and roles for the user
+    const {
+      data: participateData,
+      error: participateError,
+      status: participateStatus,
+    } = await supabase
+      .from("participate")
+      .select("projectid, role")
+      .eq("username", username);
+
+    if (participateError) {
+      return res.status(participateStatus).json({
+        error: `There was an error retrieving the user's projects: ${participateError.message}`,
+      });
     }
+
+    res.status(participateStatus).json({ data: participateData });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

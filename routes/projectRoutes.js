@@ -101,7 +101,7 @@ router.delete("/delete/:projectId", async (req, res) => {
 });
 
 // Route to update the project
-router.post("/update/:projectId", async (req, res) => {
+router.put("/:projectId", async (req, res) => {
   try {
     const projectId = req.params.projectId;
     const { name, description } = req.body;
