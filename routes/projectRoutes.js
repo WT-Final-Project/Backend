@@ -5,7 +5,7 @@ const supabase = require("../supabase/supabaseClient"); // Import the client
 const router = express.Router();
 
 // Route to create a project
-router.post("/create", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { username, name, description } = req.body;
 
@@ -48,7 +48,7 @@ router.post("/create", async (req, res) => {
 });
 
 // Route to get project by id
-router.get("/obtain/:projectId", async (req, res) => {
+router.get("/:projectId", async (req, res) => {
   try {
     const projectId = req.params.projectId;
 
@@ -78,7 +78,7 @@ router.get("/obtain/:projectId", async (req, res) => {
 });
 
 // Route to delete a project by its Id
-router.delete("/delete/:projectId", async (req, res) => {
+router.delete("/:projectId", async (req, res) => {
   try {
     const projectId = req.params.projectId;
 

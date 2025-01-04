@@ -8,13 +8,13 @@ router.post("/", async (req, res) => {
   try {
     const { projectId, username, role } = req.body;
 
-    // Insert a new participant into the 'participant' table
+    // Insert a new participant into the 'participate' table
     const { error: insertError, status: insertStatus } = await supabase
-      .from("participant")
+      .from("participate")
       .insert({
         projectid: projectId,
         username: username,
-        role: role || "participant",
+        userrole: role || "participant",
       });
 
     if (insertError) {
@@ -41,14 +41,14 @@ router.get("/rank/:projectId/:username", async (req, res) => {
       status: rankStatus,
     } = await supabase
       .from("participate")
-      .select("role")
+      .select("userrole")
       .eq("projectid", projectId)
       .eq("username", username)
       .maybeSingle();
 
     if (rankError) {
       return res.status(rankStatus).json({
-        error: `There was an error retrieving the user's rank: ${queryError.message}`,
+        error: `There was an error retrieving the user's rank: ${rankError.message}`,
       });
     }
 
@@ -117,7 +117,7 @@ router.get("/user-projects/:username", async (req, res) => {
       status: participateStatus,
     } = await supabase
       .from("participate")
-      .select("projectid, role")
+      .select("projectid, userrole")
       .eq("username", username);
 
     if (participateError) {
