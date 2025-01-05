@@ -1,11 +1,14 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const cors = require("cors");
+
+// const bodyParser = require("body-parser");
 
 const userRoutes = require("./routes/userRoutes.js");
 const projectRoutes = require("./routes/projectRoutes.js");
 const taskRoutes = require("./routes/taskRoutes.js");
-const ParticipateRoute = require("./routes/participateRoutes.js");
+const participateRoutes = require("./routes/participateRoutes.js");
+const fileRoutes = require("./routes/fileRoutes.js");
+
 /*
 const routesFichero = require("./routes/ficheroRoutes.js");
 const routesParticipan = require("./routes/participanRoutes.js");
@@ -15,7 +18,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   res.send("Welcome!");
@@ -24,7 +27,8 @@ app.get("/", (req, res) => {
 app.use("/user", userRoutes);
 app.use("/project", projectRoutes);
 app.use("/task", taskRoutes);
-app.use("/participate", ParticipateRoute);
+app.use("/participate", participateRoutes);
+app.use("/file", fileRoutes);
 /*
 app.use("/usuario")
 app.use("/tarea")

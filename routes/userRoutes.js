@@ -4,7 +4,7 @@ const supabase = require("../supabase/supabaseClient"); // Import the client
 const router = express.Router();
 
 // Route to create a new user
-router.post("/singup", async (req, res) => {
+router.post("/signup", async (req, res) => {
   try {
     const { username, name, password, email, lastName } = req.body;
 
