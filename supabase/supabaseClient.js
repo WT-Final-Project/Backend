@@ -7,7 +7,14 @@ const { createClient } = require("@supabase/supabase-js");
 // Initialize Supabase client using the environment variables
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
+  process.env.SUPABASE_ANON_KEY,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+      detectSessionInUrl: false,
+    },
+  }
 );
 
 // Export the supabase client to be used in other files

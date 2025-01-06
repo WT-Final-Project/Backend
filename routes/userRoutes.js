@@ -114,19 +114,16 @@ router.post("/signin", async (req, res) => {
 
     // Handle errors if Supabase query fails
     if (error) {
-      console.error("Supabase error:", error);
-      return res.status(status || 500).json({ error: error.message });
+      return res.status(status).json({ error: error.message });
     }
 
     if (!user) {
-      console.error("User not found on table:", singinError);
       return res.status(401).json({ error: "User not found on database" });
     }
 
-    res.status(200).json({ data: user.username });
+    res.status(status).json({ data: { user: user, credentials: singinUser } });
   } catch (err) {
-    console.error("Unexpected error:", err);
-    return res.status(500).json({ error: "¡Something went wrong!" });
+    return res.status(500).json({ error: err.message });
   }
 });
 
@@ -233,20 +230,57 @@ router.delete("/:username", async (req, res) => {
   }
 });
 
-//Ruta para actualizar el nombre de un usuario
-router.post("/:nombreUsuario", async (req, res) => {
+// Route to update a user's details
+router.put("/:username", async (req, res) => {
   try {
-    const nombreUsuario = req.params.nombreUsuario;
-    const { nombre, contrasenya, correo, apellidos } = req.body;
-    // Llama a tu función DAO con los datos recibidos
-    const resultado = await usuarioDAO.updateUsuario(
-      nombreUsuario,
-      nombre,
-      contrasenya,
-      correo,
-      apellidos
-    );
-    res.json({ resultado });
+    const { username } = req.params;
+    const { name, email, lastName } = req.body;
+
+    // Update the user's details in the database
+    const { error: updateError, status: updateStatus } = await supabase
+      .from("app_user")
+      .update({
+        firstname: name,
+        email: email,
+        lastname: lastName,
+      })
+      .eq("username", username);
+
+    if (updateError) {
+      return res.status(updateStatus).json({
+        error: `There was an error updating the user: ${updateError.message}`,
+      });
+    }
+
+    res.sendStatus(updateStatus);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Route to change the user's password
+router.put("/change-password", async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+
+    // Validate input
+    if (!newPassword) {
+      return res.status(400).json({ error: "New password is required" });
+    }
+
+    // Supabase handles the user identification through the access token
+    const { error: changeError } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    // Handle potential errors
+    if (changeError) {
+      return res.status(400).json({
+        error: `There was an error updating the password: ${changeError.message}`,
+      });
+    }
+
+    return res.sendStatus(200);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
