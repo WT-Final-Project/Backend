@@ -234,14 +234,13 @@ router.delete("/:username", async (req, res) => {
 router.put("/:username", async (req, res) => {
   try {
     const { username } = req.params;
-    const { name, email, lastName } = req.body;
+    const { name, lastName } = req.body;
 
     // Update the user's details in the database
     const { error: updateError, status: updateStatus } = await supabase
       .from("app_user")
       .update({
         firstname: name,
-        email: email,
         lastname: lastName,
       })
       .eq("username", username);
@@ -258,38 +257,40 @@ router.put("/:username", async (req, res) => {
   }
 });
 
+// Not in use
+
 // Route to change the user's password
-router.put("/change-password", async (req, res) => {
-  try {
-    const { newPassword } = req.body;
+// router.put("/change-password", async (req, res) => {
+//   try {
+//     const { newPassword } = req.body;
 
-    // Validate input
-    if (!newPassword) {
-      return res.status(400).json({ error: "New password is required" });
-    }
+//     // Validate input
+//     if (!newPassword) {
+//       return res.status(400).json({ error: "New password is required" });
+//     }
 
-    // Supabase handles the user identification through the access token
-    const { error: changeError } = await supabase.auth.updateUser({
-      password: newPassword,
-    });
+//     // Supabase handles the user identification through the access token
+//     const { error: changeError } = await supabase.auth.updateUser({
+//       password: newPassword,
+//     });
 
-    // Handle potential errors
-    if (changeError) {
-      return res.status(400).json({
-        error: `There was an error updating the password: ${changeError.message}`,
-      });
-    }
+//     // Handle potential errors
+//     if (changeError) {
+//       return res.status(400).json({
+//         error: `There was an error updating the password: ${changeError.message}`,
+//       });
+//     }
 
-    return res.sendStatus(200);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+//     return res.sendStatus(200);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 
-// Function to validate email format
-function isValidEmail(email) {
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return emailRegex.test(email);
-}
+// // Function to validate email format
+// function isValidEmail(email) {
+//   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+//   return emailRegex.test(email);
+// }
 
 module.exports = router;
