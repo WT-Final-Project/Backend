@@ -41,7 +41,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    return res.sendStatus(participateStatus);
+    return res.status(participateStatus).json({ data: projectData });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
