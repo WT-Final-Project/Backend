@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 
-// const bodyParser = require("body-parser");
-
 const userRoutes = require("./routes/userRoutes.js");
 const projectRoutes = require("./routes/projectRoutes.js");
 const taskRoutes = require("./routes/taskRoutes.js");
@@ -13,7 +11,6 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-// app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   res.send("Welcome!");
