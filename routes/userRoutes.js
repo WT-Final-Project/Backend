@@ -20,7 +20,7 @@ router.post("/signup", async (req, res) => {
 
     if (userError) {
       return res.status(500).json({
-        error: "Error checking username availability",
+        error: `There was an error checking the user ${userError.message}`,
       });
     }
 
@@ -65,7 +65,6 @@ router.post("/signup", async (req, res) => {
       });
     }
 
-    // Success response
     return res.sendStatus(insertStatus);
   } catch (err) {
     console.error("Error while creating user:", err);
@@ -111,13 +110,14 @@ router.post("/signin", async (req, res) => {
       .eq("id", singinUser.user.id)
       .single();
 
-    // Handle errors if Supabase query fails
     if (error) {
-      return res.status(status).json({ error: error.message });
+      return res.status(status).json({
+        error: `There was an error finding the user: ${error.message}`,
+      });
     }
 
     if (!user) {
-      return res.status(401).json({ error: "User not found on database" });
+      return res.status(status).json({ error: "User not found on database" });
     }
 
     res.status(status).json({ data: { user: user, credentials: singinUser } });
@@ -150,10 +150,10 @@ router.get("/:username", async (req, res) => {
       .eq("username", usernameLowerCase)
       .single();
 
-    // Handle errors if Supabase query fails
     if (error) {
-      console.error("Supabase error:", error);
-      return res.status(status || 500).json({ error: error.message });
+      return res.status(status).json({
+        error: `There was an error finding the user: ${error.message}`,
+      });
     }
 
     console.log("Data: ", data);
@@ -162,11 +162,10 @@ router.get("/:username", async (req, res) => {
     if (data) {
       return res.status(status).json(data);
     } else {
-      return res.status(404).json({ error: "Usuario no encontrado" });
+      return res.status(404).json({ error: "User not found" });
     }
   } catch (err) {
-    console.error("Unexpected error:", err);
-    return res.status(500).json({ error: "¡Algo salió mal!" });
+    return res.status(500).json({ error: err.message });
   }
 });
 
@@ -210,7 +209,7 @@ router.delete("/:username", async (req, res) => {
     // }
 
     // Delete user from app_user
-    const { error: dbDeleteError } = await supabase
+    const { error: dbDeleteError, status: dbDeleteStatus } = await supabase
       .from("app_user")
       .delete()
       .eq("id", user.id);
@@ -222,10 +221,9 @@ router.delete("/:username", async (req, res) => {
         .json({ error: "Failed to delete user from the database" });
     }
 
-    res.sendStatus(200);
+    res.sendStatus(dbDeleteStatus);
   } catch (err) {
-    console.error("Unexpected error:", err);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -235,7 +233,7 @@ router.put("/:username", async (req, res) => {
     const { username } = req.params;
     const { name, lastName } = req.body;
 
-    // Update the user's details in the database
+    // Update the user's details
     const { error: updateError, status: updateStatus } = await supabase
       .from("app_user")
       .update({

@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
   try {
     const { username, name, description } = req.body;
 
-    // Insert new project into the 'project' table
+    // Insert new project
     const {
       data: projectData,
       error: projectError,
@@ -52,7 +52,7 @@ router.get("/:projectId", async (req, res) => {
   try {
     const projectId = req.params.projectId;
 
-    // Fetch project from the 'project' table by projectid
+    // Fetch project by projectid
     const {
       data: projectData,
       error: projectError,
@@ -69,8 +69,6 @@ router.get("/:projectId", async (req, res) => {
       });
     }
 
-    console.log(projectData);
-
     res.status(projectStatus).json({ data: projectData });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -82,7 +80,7 @@ router.delete("/:projectId", async (req, res) => {
   try {
     const projectId = req.params.projectId;
 
-    // Delete the project from the 'project' table
+    // Delete the project
     const { error: deleteError, status: deleteStatus } = await supabase
       .from("project")
       .delete()
@@ -106,7 +104,7 @@ router.put("/:projectId", async (req, res) => {
     const projectId = req.params.projectId;
     const { name, description } = req.body;
 
-    // Update the project in the 'project' table
+    // Update the project
     const { error: updateError, status: updateStatus } = await supabase
       .from("project")
       .update({

@@ -4,11 +4,11 @@ const supabase = require("../supabase/supabaseClient");
 
 const router = express.Router();
 
-// Set up multer storage configuration (for temporary file storage in memory)
+// Set up multer storage configuration
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Route to upload a file (use `upload.single` for a single file)
+// Route to upload a file
 router.post("/", upload.single("fileContent"), async (req, res) => {
   try {
     const { taskId } = req.body;
@@ -49,9 +49,9 @@ router.post("/", upload.single("fileContent"), async (req, res) => {
 
     // Upload the file to Supabase storage
     const { error: uploadError } = await supabase.storage
-      .from("project-files") // Replace with your bucket name
+      .from("project-files")
       .upload(filePath, fileBuffer, {
-        contentType: mimeType, // MIME type from the frontend
+        contentType: mimeType,
       });
 
     if (uploadError) {
@@ -110,9 +110,9 @@ router.delete("/:fileId", async (req, res) => {
       .remove([filePath]);
 
     if (storageError) {
-      throw new Error(
-        `Failed to delete file from storage: ${storageError.message}`
-      );
+      return res.status(500).json({
+        error: `Failed to delete file from storage: ${storageError.message}`,
+      });
     }
 
     // Remove the file record from the database
@@ -122,9 +122,9 @@ router.delete("/:fileId", async (req, res) => {
       .eq("fileid", fileId);
 
     if (deleteError) {
-      throw new Error(
-        `There was an error deleting the  file record from database: ${deleteError.message}`
-      );
+      return res.status(deleteStatus).json({
+        error: `There was an error deleting the  file record from database: ${deleteError.message}`,
+      });
     }
 
     res.sendStatus(deleteStatus);

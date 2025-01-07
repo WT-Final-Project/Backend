@@ -8,7 +8,7 @@ router.post("/", async (req, res) => {
   try {
     const { projectId, username, title, description, dueDate } = req.body;
 
-    // Insert a new task into the 'task' table
+    // Insert a new task
     const { error: taskError, status: taskStatus } = await supabase
       .from("task")
       .insert({
@@ -37,7 +37,7 @@ router.get("/:taskId", async (req, res) => {
   try {
     const taskId = req.params.taskId;
 
-    // Fetch the task by its ID from the 'task' table
+    // Fetch the task by its ID
     const {
       data: getData,
       error: getError,
@@ -61,7 +61,7 @@ router.delete("/:taskId", async (req, res) => {
   try {
     const taskId = req.params.taskId;
 
-    // Delete the task from the 'task' table
+    // Delete the task
     const { error: deleteError, status: deleteStatus } = await supabase
       .from("task")
       .delete()
@@ -112,7 +112,7 @@ router.post("/complete/:taskId", async (req, res) => {
   try {
     const taskId = req.params.taskId;
 
-    // Update task to completed from the 'task' table
+    // Update task to completed
     const { error: completeError, status: completeStatus } = await supabase
       .from("task")
       .update({
@@ -137,7 +137,7 @@ router.get("/uncompleted/:projectId", async (req, res) => {
   try {
     const projectId = req.params.projectId;
 
-    // Fetch all uncompleted tasks for a specific project from the 'task' table
+    // Fetch all uncompleted tasks for a specific project
     const {
       data: tasks,
       error: fetchError,
@@ -165,7 +165,7 @@ router.get("/all/:projectId", async (req, res) => {
   try {
     const projectId = req.params.projectId;
 
-    // Fetch all tasks for a specific project from the 'task' table
+    // Fetch all tasks for a specific project
     const {
       data: tasks,
       error: fetchError,

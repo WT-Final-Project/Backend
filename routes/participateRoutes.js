@@ -8,7 +8,7 @@ router.post("/", async (req, res) => {
   try {
     const { projectId, username, role } = req.body;
 
-    // Insert a new participant into the 'participate' table
+    // Insert a new participant
     const { error: insertError, status: insertStatus } = await supabase
       .from("participate")
       .insert({
@@ -34,7 +34,7 @@ router.get("/rank/:projectId/:username", async (req, res) => {
   try {
     const { projectId, username } = req.params;
 
-    // Query the 'participate' table to get the user's role in the project
+    // Query to get the user's role in the project
     const {
       data: rankData,
       error: rankError,
@@ -69,7 +69,7 @@ router.delete("/:projectId/:username", async (req, res) => {
   try {
     const { projectId, username } = req.params;
 
-    // Delete the participant from the 'participate' table
+    // Delete the participant
     const { error: deleteError, status: deleteStatus } = await supabase
       .from("participate")
       .delete()
@@ -110,7 +110,7 @@ router.get("/user-projects/:username", async (req, res) => {
   try {
     const username = req.params.username;
 
-    // Query the 'participate' table to get all projects and roles for the user
+    // Query to get all projects and roles for the user
     const {
       data: participateData,
       error: participateError,
