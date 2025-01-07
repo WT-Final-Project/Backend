@@ -56,7 +56,6 @@ router.post("/signup", async (req, res) => {
           username: usernameLowerCase,
           firstname: name,
           lastname: lastName,
-          email: email,
         },
       ]);
 
@@ -199,7 +198,7 @@ router.delete("/:username", async (req, res) => {
     }
 
     // Delete user from auth table
-    // const { error: authDeleteError } = await supabase.auth.admin.deleteUser(
+    // const { error: authDeleteError } = await supabaseAdmin.auth.admin.deleteUser(
     //   user.id
     // );
 
@@ -257,40 +256,10 @@ router.put("/:username", async (req, res) => {
   }
 });
 
-// Not in use
-
-// Route to change the user's password
-// router.put("/change-password", async (req, res) => {
-//   try {
-//     const { newPassword } = req.body;
-
-//     // Validate input
-//     if (!newPassword) {
-//       return res.status(400).json({ error: "New password is required" });
-//     }
-
-//     // Supabase handles the user identification through the access token
-//     const { error: changeError } = await supabase.auth.updateUser({
-//       password: newPassword,
-//     });
-
-//     // Handle potential errors
-//     if (changeError) {
-//       return res.status(400).json({
-//         error: `There was an error updating the password: ${changeError.message}`,
-//       });
-//     }
-
-//     return res.sendStatus(200);
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// });
-
-// // Function to validate email format
-// function isValidEmail(email) {
-//   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-//   return emailRegex.test(email);
-// }
+// Function to validate email format
+function isValidEmail(email) {
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
+}
 
 module.exports = router;
