@@ -105,19 +105,28 @@ router.delete("/:projectId/:username", async (req, res) => {
 //   }
 // });
 
-// Route to obtain all the projects in which the user participate with his role
+// Route to obtain all the projects in which the user participates with their role and project descriptions
 router.get("/user-projects/:username", async (req, res) => {
   try {
     const username = req.params.username;
 
-    // Query to get all projects and roles for the user
+    // Query to get all projects, roles, and descriptions for the user
     const {
       data: participateData,
       error: participateError,
       status: participateStatus,
     } = await supabase
       .from("participate")
-      .select("projectid, userrole")
+      .select(
+        `
+        projectid,
+        userrole,
+        project:projectid (
+        projectname,  
+        description 
+        )
+      `
+      )
       .eq("username", username);
 
     if (participateError) {
@@ -126,7 +135,21 @@ router.get("/user-projects/:username", async (req, res) => {
       });
     }
 
-    res.status(participateStatus).json({ data: participateData });
+    if (!participateData || participateData.length === 0) {
+      return res
+        .status(participateStatus)
+        .json({ error: "No projects found for the user." });
+    }
+
+    // Format the response to include projectid, userrole, and description
+    const data = participateData.map((record) => ({
+      projectid: record.projectid,
+      userrole: record.userrole,
+      description: record.project.description,
+      name: record.project.projectname,
+    }));
+
+    res.status(participateStatus).json({ data: data });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

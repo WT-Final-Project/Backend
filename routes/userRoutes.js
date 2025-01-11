@@ -156,8 +156,6 @@ router.get("/:username", async (req, res) => {
       });
     }
 
-    console.log("Data: ", data);
-
     // Check if user exists
     if (data) {
       return res.status(status).json(data);
