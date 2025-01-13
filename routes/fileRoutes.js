@@ -182,6 +182,7 @@ router.get("/:taskId", async (req, res) => {
       );
 
       return {
+        fileid: file.fileid,
         name: file.name,
         signedUrl: signedUrlEntry?.signedUrl || null, // If URL does not exist --> null
       };
